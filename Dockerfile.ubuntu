@@ -1,0 +1,21 @@
+# Use an official ubuntu jammy OS as a parent image
+FROM ubuntu:22.04
+LABEL version="0.1.0" vicarversion="5.0" description="VICAR centos container" maintainer="Andrew Annex <annex@seti.org>"
+WORKDIR /
+COPY build_ubuntu.sh /app
+RUN  /bin/bash /app/build_ubuntu.sh
+
+# setup ownership to vos user
+RUN useradd -m -s /bin/tcsh vos
+COPY .cshrc /home/vos/.cshrc
+RUN chown vos:vos /home/vos/.cshrc
+
+# Switch to user vos
+USER vos
+ENV V2TOP /vos
+
+# Use tcsh
+ENTRYPOINT ["/bin/tcsh", "-c"]
+
+# Volume for data input
+VOLUME /data
