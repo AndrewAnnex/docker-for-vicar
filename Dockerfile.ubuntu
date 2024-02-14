@@ -12,7 +12,6 @@ RUN chown vos:vos /home/vos/.cshrc
 
 # Switch to user vos
 USER vos
-ENV V2TOP /vos
 
 # Use tcsh
 ENTRYPOINT ["/bin/tcsh", "-c"]
