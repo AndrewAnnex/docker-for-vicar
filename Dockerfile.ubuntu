@@ -2,8 +2,8 @@
 FROM ubuntu:22.04
 LABEL version="0.1.0" vicarversion="5.0" description="VICAR centos container" maintainer="Andrew Annex <annex@seti.org>"
 WORKDIR /
-COPY build_ubuntu.sh /app
-RUN  /bin/bash /app/build_ubuntu.sh
+COPY build_ubuntu.sh /app/build_ubuntu.sh
+RUN /app/build_ubuntu.sh
 
 # setup ownership to vos user
 RUN useradd -m -s /bin/tcsh vos

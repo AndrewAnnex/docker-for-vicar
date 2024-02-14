@@ -2,8 +2,8 @@
 FROM centos:7
 LABEL version="0.1.0" vicarversion="5.0" description="VICAR centos container" maintainer="Andrew Annex <annex@seti.org>"
 WORKDIR /
-COPY build_centos.sh /app
-RUN  /bin/bash /app/build_centos.sh
+COPY build_centos.sh /app/build_centos.sh
+RUN /app/build_centos.sh
 
 # setup ownership to vos user
 RUN useradd -m -s /bin/tcsh vos
