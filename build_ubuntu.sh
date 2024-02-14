@@ -9,6 +9,7 @@ apt-get install --yes \
     wget \
     vim \
 	tcsh \
+    libcurl4-openssl-dev \
 	libtbb2 \
 	libncurses5-dev \
 	build-essential \

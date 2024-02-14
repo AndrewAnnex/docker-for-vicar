@@ -2,7 +2,12 @@
 
 yum -y install gcc-c++.x86_64 \
     vim-enhanced \
+    wget \
+    libcurl-devel \
 	gcc-gfortran \
+    tbb-devel \
+    devtoolset-8-gcc-gfortran.x86_64 \
+    ncurses-libs \
 	imake.x86_64 \
 	java-1.7.0-openjdk-devel.x86_64 \
 	libXp.x86_64 \
