@@ -4,7 +4,8 @@ LABEL version="0.1.0" vicarversion="5.0" description="VICAR centos container" ma
 WORKDIR /
 COPY build_centos.sh /app/build_centos.sh
 RUN /app/build_centos.sh
-
+# add test script
+COPY vicar_tests.sh /data/vicar_tests.sh
 # setup ownership to vos user
 RUN useradd -m -s /bin/tcsh vos
 COPY .cshrc /home/vos/.cshrc

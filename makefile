@@ -3,8 +3,8 @@ UBUNTU_IMAGE_NAME=vicar:ubuntu
 CENTOS_IMAGE_NAME=vicar:centos
 
 # Define container names
-UBUNTU_CONTAINER_NAME=vicar:ubuntu:test
-CENTOS_CONTAINER_NAME=vicar:centos:test
+UBUNTU_CONTAINER_NAME=vicar_ubuntu_test
+CENTOS_CONTAINER_NAME=vicar_centos_test
 
 # Specify AMD64 platform, will later allow easier cross arch builds I think without messing with dockerfiles
 PLATFORM=linux/amd64
@@ -27,10 +27,10 @@ build_centos:
 run_tests: test_ubuntu test_centos
 
 test_ubuntu:
-	docker run --rm --platform $(PLATFORM) --name $(UBUNTU_CONTAINER_NAME) $(UBUNTU_IMAGE_NAME) -w /data/ ./vicar_tests.sh
+	docker run --rm -w /data/ --platform $(PLATFORM) --name $(UBUNTU_CONTAINER_NAME) $(UBUNTU_IMAGE_NAME) /data/vicar_tests.sh
 
 test_centos:
-	docker run --rm --platform $(PLATFORM) --name $(CENTOS_CONTAINER_NAME) $(CENTOS_IMAGE_NAME) -w /data/ ./vicar_tests.sh
+	docker run --rm -w /data/ --platform $(PLATFORM) --name $(CENTOS_CONTAINER_NAME) $(CENTOS_IMAGE_NAME) /data/vicar_tests.sh
 
 # Clean up Docker images
 clean:
