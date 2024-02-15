@@ -15,6 +15,7 @@ apt-get install --yes \
 	build-essential \
 	gfortran \
 	xorg-dev \
+    xutils-dev \
 	xserver-xorg-dev \
 	libmotif-dev \
 	libmotif-common \
