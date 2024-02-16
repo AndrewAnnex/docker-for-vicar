@@ -1,6 +1,6 @@
 # Use an official ubuntu jammy OS as a parent image
 FROM ubuntu:22.04
-LABEL version="0.1.0" vicarversion="5.0" description="VICAR centos container" maintainer="Andrew Annex <annex@seti.org>"
+LABEL version="0.1.0" vicarversion="5.0" description="VICAR ubuntu container" maintainer="Andrew Annex <annex@seti.org>"
 WORKDIR /
 COPY .cshrc vicar_tests.sh /
 # okay a big step here
