@@ -2,8 +2,7 @@
 
 Provides dockerfiles for [VICAR](https://github.com/NASA-AMMOS/VICAR)
 
-Currently attempts to provide both ubuntu and centos containers,
-but the centos one is turning out to be too much trouble so it will go away
+Currently attempts to provide an ubuntu container.
 
 VICAR is installed in the /vos directory but all the commands/environment variables
 are already available in tcsh if you start the container

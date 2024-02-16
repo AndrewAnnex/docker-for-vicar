@@ -2,20 +2,54 @@
 FROM ubuntu:22.04
 LABEL version="0.1.0" vicarversion="5.0" description="VICAR centos container" maintainer="Andrew Annex <annex@seti.org>"
 WORKDIR /
-COPY build_ubuntu.sh /app/build_ubuntu.sh
-RUN /app/build_ubuntu.sh
-# add test script
-COPY vicar_tests.sh /data/vicar_tests.sh
-# setup ownership to vos user
-RUN useradd -m -s /bin/tcsh vos
-COPY .cshrc /home/vos/.cshrc
-RUN chown vos:vos /home/vos/.cshrc
+COPY .cshrc vicar_tests.sh /
+# okay a big step here
+RUN apt-get update && \
+    apt-get install --yes software-properties-common && \
+    add-apt-repository --yes ppa:zeehio/libxp && \
+    apt-get install --no-install-recommends --yes \
+    wget \
+    vim \
+    tcsh \
+    libcurl4-openssl-dev \
+    libtbb2 \
+    libncurses5-dev \
+    build-essential \
+    gfortran \
+    xorg-dev \
+    xutils-dev \
+    xserver-xorg-dev \
+    libmotif-dev \
+    libmotif-common \
+    libxp6 \
+    openjdk-17-jre && \
+    apt-get purge software-properties-common --yes && \
+    apt-get autoremove --yes && \
+    apt-get clean --yes && \
+    mkdir /data && \
+    cd /tmp && \
+    wget https://github.com/NASA-AMMOS/VICAR/releases/download/5.0/vicar_open_bin_x86-64-linx_5.0.tar.gz && \
+    apt-get purge wget --yes && \
+    apt-get autoremove --yes && \
+    apt-get clean --yes && \
+    rm -rf /var/lib/apt/lists/* && \
+    tar -xf vicar_open_bin_x86-64-linx_5.0.tar.gz && \
+    mv /tmp/vicar_open_bin_x86-64-linx_5.0/vicar_open_5.0 /vos && \
+    mv /tmp/vicar_open_bin_x86-64-linx_5.0/vicar_open_ext_x86-64-linx_5.0 /external && \
+    rm /tmp/vicar_open_bin_x86-64-linx_5.0.tar.gz && \
+    cd / && \
+    chmod 777 /data && \
+    chmod -R 777 /vos && \
+    chmod -R 777 /external && \
+    useradd -m -s /bin/tcsh vos && \
+    mv /.cshrc /home/vos/.cshrc && \
+    mv /vicar_tests.sh /data/vicar_tests.sh && \
+    chown vos:vos /home/vos/.cshrc && \
+    chown -R vos:vos /data
 
 # Switch to user vos
 USER vos
-
 # Use tcsh
 ENTRYPOINT ["/bin/tcsh", "-c"]
-
 # Volume for data input
 VOLUME /data
