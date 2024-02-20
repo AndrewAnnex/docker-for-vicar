@@ -1,6 +1,6 @@
 # Use an official ubuntu jammy OS as a parent image
-FROM ubuntu:22.04
-LABEL version="0.1.0" vicarversion="5.0" description="VICAR ubuntu container" maintainer="Andrew Annex <annex@seti.org>"
+FROM ubuntu:22.04 as vicarbase
+LABEL version="0.1.0" vicarversion="5.0" description="VICAR ubuntu base container" maintainer="Andrew Annex <annex@seti.org>"
 WORKDIR /
 COPY .cshrc vicar_tests.sh /
 # okay a big step here
@@ -21,6 +21,12 @@ RUN apt-get update && \
     xserver-xorg-dev \
     libmotif-dev \
     libmotif-common \
+    libx11-dev \
+    libudev-dev \
+    libxml2-dev \
+    libglfw3-dev \
+    libgl1-mesa-dev \
+    libglu1-mesa-dev \
     libxp6 \
     openjdk-17-jre && \
     apt-get purge software-properties-common --yes && \
@@ -33,17 +39,23 @@ RUN apt-get update && \
     chown vos:vos /home/vos/.cshrc && \
     chown -R vos:vos /data && \
     chmod 777 /data && \
+    ln -s /usr/lib/x86_64-linux-gnu/libXp.so.6 /usr/lib/x86_64-linux-gnu/libXp.so && \
     rm -rf /var/lib/apt/lists/*
+
+# compilation docker image
+FROM vicarbase as runtime
+LABEL version="0.1.0" vicarversion="5.0" description="VICAR ubuntu runtime container" maintainer="Andrew Annex <annex@seti.org>"
+WORKDIR /
 RUN cd /tmp && \
     wget https://github.com/NASA-AMMOS/VICAR/releases/download/5.0/vicar_open_bin_x86-64-linx_5.0.tar.gz && \
     tar -xf vicar_open_bin_x86-64-linx_5.0.tar.gz && \
     mv /tmp/vicar_open_bin_x86-64-linx_5.0/vicar_open_5.0 /vos && \
     mv /tmp/vicar_open_bin_x86-64-linx_5.0/vicar_open_ext_x86-64-linx_5.0 /external && \
     rm /tmp/vicar_open_bin_x86-64-linx_5.0.tar.gz && \
+    rm /tmp/vicar_open_bin_x86-64-linx_5.0 && \
     chmod -R 777 /vos && \
+    chown -R vos:vos /data && \
     chmod -R 777 /external
-
-
 # Switch to user vos
 USER vos
 # Use tcsh
