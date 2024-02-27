@@ -1,7 +1,7 @@
 # discover calibration files at runtime looking in /data/calibration/
 setenv ACC_MARS_CONFIG_PATH ""
-set cal_path = "/data/calibration/"
-if ( -d /data/calibration/ ) then
+set cal_path = "/calibration/"
+if ( -d /calibration/ ) then
     set cal_dirs = `ls -d $cal_path/*/`
     foreach dir ($cal_dirs)
       setenv ACC_MARS_CONFIG_PATH "${ACC_MARS_CONFIG_PATH}${dir}:"

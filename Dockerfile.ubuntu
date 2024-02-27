@@ -9,6 +9,9 @@ RUN apt-get update && \
     add-apt-repository --yes ppa:zeehio/libxp && \
     apt-get install --no-install-recommends --yes \
     wget \
+    rsync \
+    gdb \
+    valgrind \
     vim \
     tcsh \
     libcurl4-openssl-dev \
@@ -40,7 +43,10 @@ RUN apt-get update && \
     chown -R vos:vos /data && \
     chmod 777 /data && \
     ln -s /usr/lib/x86_64-linux-gnu/libXp.so.6 /usr/lib/x86_64-linux-gnu/libXp.so && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/* && \
+    wget https://github.com/Kitware/CMake/releases/download/v3.27.9/cmake-3.27.9-linux-x86_64.sh -O cmake.sh && \
+    sh cmake.sh --prefix=/usr/local/ --exclude-subdir && \
+    rm -rf cmake.sh;
 
 # compilation docker image
 FROM vicarbase as runtime
@@ -52,7 +58,7 @@ RUN cd /tmp && \
     mv /tmp/vicar_open_bin_x86-64-linx_5.0/vicar_open_5.0 /vos && \
     mv /tmp/vicar_open_bin_x86-64-linx_5.0/vicar_open_ext_x86-64-linx_5.0 /external && \
     rm /tmp/vicar_open_bin_x86-64-linx_5.0.tar.gz && \
-    rm /tmp/vicar_open_bin_x86-64-linx_5.0 && \
+    rm -rf /tmp/vicar_open_bin_x86-64-linx_5.0 && \
     chmod -R 777 /vos && \
     chown -R vos:vos /data && \
     chmod -R 777 /external

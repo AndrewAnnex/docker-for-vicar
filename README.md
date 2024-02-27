@@ -13,26 +13,27 @@ Work within the docker container is expected to occur in the `/data/` folder.
 Use that path for volumes or mounts to move data in and out of the docker container.
 For example, to use a mount for the current working directory on the host machine,
 use docker run with `-v `pwd`:/data` to access data in that folder within docker.
+Just make sure the permissions on the work directory on the host machine are permissive (777).
 
 
 ### Calibration configuration
 For certain VISOR programs (marsmap etc) VICAR needs a calibration folder for each supported mission.
 These files can get very large so they are not included in the docker container. To use calibration data
-stored on the host machine, simply store the data in a folder called `calibration` in some directory you want and then
-mount the parent directory to `/data/` so that `/data/calibration` is available within the container.
-This is done by adding `-v /parent/dir/for/calibration:/data` to the docker run command.
+stored on the host machine, simply store the data in a folder in some directory you want and then
+mount the parent directory to `/calibration` so it is available within the container.
+This is done by adding `-v <HOSTFOLDER>:/calibration` to the docker run command.
+Below we actually make it a named volume on host using the docker volume command.
 
 This can also be inside a exclusive docker volume:
 ```bash
 docker volume create vicarcal
-# inside the volume
-mkdir calibration
-# copy mission cal dirs into calibration so ./calibration/m20, ./calibration/mer etc exist
+#
+# inside the volume copy mission cal dirs into calibration so ./m20, ./mer etc exist
 # now run on the host wherever
-docker run -it --rm -v vicarcal:/data --platform linux/amd64 -w /data/ vicar:ubuntu /bin/tcsh
+docker run -it --rm -v vicarcal:/calibration -v <HOSTWORKDIR>:/data --platform linux/amd64 -w /data/ vicar:ubuntu /bin/tcsh
 ```
 
-The `calibration` directory will have the various folders for each supported mission (e.g. `m20`,`mer`, etc)
+The `/calibration` directory will have the various folders for each supported mission (e.g. `m20`,`mer`, etc)
 and the docker container has some smarts to discover those folders at runtime (see `.cshrc`).
 
 ## X11 on macOS
