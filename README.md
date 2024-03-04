@@ -36,6 +36,14 @@ docker run -it --rm -v vicarcal:/calibration -v <HOSTWORKDIR>:/data --platform l
 The `/calibration` directory will have the various folders for each supported mission (e.g. `m20`,`mer`, etc)
 and the docker container has some smarts to discover those folders at runtime (see `.cshrc`).
 
+
+### Compiling VICAR
+This is a bit of a work in progress still, but if you have a git repo of VICAR you are developing in on the host, you can compile within the docker container by following the steps below:
+
+1. add a mount for the vos directory to the docker run step like `-v HOSTVICAR/vos:/vossrc`
+2. Inside the container run `rsync -crhv --out-format="[%t]:%o:%f" /vossrc/ $V2TOP` to sync the updated files inside the container
+3. Rebuild something like MARS sub `cd $MARSSUB && $V2UTIL/bldcomfiles_nounpack.csh $MARSLIB`
+
 ## X11 on macOS
 
 If using macOS please:
