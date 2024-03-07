@@ -33,15 +33,13 @@ test_ubuntu:
 # For Dev work when you want to make production image
 compile: compile_vicar commit
 
-# For compiling updated vicar code
+# For compiling updated vicar code, run docker commit outside of makefile
 compile_vicar:
-    $(eval CONTAINER_ID=$(shell docker run -w /data/ --platform $(PLATFORM) -v $(DEVVOS)/vossrc $(UBUNTU_IMAGE_NAME) update_mars))
-	docker commit -m="Compiled VICAR" --author="Andrew Annex" $(CONTAINER_ID) $(COMP_IMG_NM)
-	@echo "Created new image: $(COMP_IMG_NM) from container: $(CONTAINER_ID)"
+    docker run -w /data/ --platform $(PLATFORM) -v $(DEVVOS)/vossrc $(UBUNTU_IMAGE_NAME) update_getproj
 
 # Clean up Docker images
 clean:
 	docker rmi $(UBUNTU_IMAGE_NAME)
 
-.PHONY: all build compile_vicar
+.PHONY: all build compile_vicar build_ubuntu run_tests test_ubuntu compile clean
 
