@@ -57,9 +57,10 @@ The volume will make the host machine's VICAR source code directory available in
 Then just use docker commit to save the final container as a new image.
 
 ```bash
-docker commit <sha of container> vicarprod:latest
+docker container commit <sha of container> vicarprod
 ```
-(need to double check the above but approximately this)
+
+then you can use that container name (vicarprod) in place of the other names 
 
 ## X11 on macOS
 
