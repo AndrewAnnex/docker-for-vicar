@@ -44,6 +44,23 @@ This is a bit of a work in progress still, but if you have a git repo of VICAR y
 2. Inside the container run `rsync -crhv --out-format="[%t]:%o:%f" /vossrc/ $V2TOP` to sync the updated files inside the container
 3. Rebuild something like MARS sub `cd $MARSSUB && $V2UTIL/bldcomfiles_nounpack.csh $MARSLIB`
 
+#### Compiling VICAR with source on host
+Say you are editing VICAR source code on a host machine and want to compile it within a docker container and then save the resulting container as an image.
+
+you would run:
+```bash
+docker run -w /data/ -v /path/to/host/src/VICAR/vos/:/vossrc --name vicar_compiled --platform linux/amd64 vicar:ubuntu update_mars
+```
+
+The volume will make the host machine's VICAR source code directory available in the container and the aliases within .cshrc will take care of building the MARS programs in VICAR.
+
+Then just use docker commit to save the final container as a new image.
+
+```bash
+docker commit <sha of container> vicarprod:latest
+```
+(need to double check the above but approximately this)
+
 ## X11 on macOS
 
 If using macOS please:

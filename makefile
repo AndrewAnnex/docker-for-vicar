@@ -1,9 +1,3 @@
-# define default vicar vos path
-DEVVOS ?= /tmp/vos
-PROD_NAME ?= vicar-prod
-TAG ?= latest
-COMP_IMG_NM ?= andrewannex/vicar:custom
-
 # Define image names
 UBUNTU_IMAGE_NAME ?= vicar:ubuntu
 
@@ -29,13 +23,6 @@ run_tests: test_ubuntu
 
 test_ubuntu:
 	docker run --rm -w /data/ --platform $(PLATFORM) --name $(UBUNTU_CONTAINER_NAME) $(UBUNTU_IMAGE_NAME) /data/vicar_tests.sh
-
-# For Dev work when you want to make production image
-compile: compile_vicar commit
-
-# For compiling updated vicar code, run docker commit outside of makefile
-compile_vicar:
-    docker run -w /data/ --platform $(PLATFORM) -v $(DEVVOS)/vossrc $(UBUNTU_IMAGE_NAME) update_getproj
 
 # Clean up Docker images
 clean:
