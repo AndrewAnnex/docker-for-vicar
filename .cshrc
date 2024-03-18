@@ -27,11 +27,8 @@ endif
 
 alias update_vos 'rsync -crhv --out-format="[%t]:%o:%f" /vossrc/ $V2TOP && cd /data'
 alias update_getproj 'update_vos && cd $V2TOP/p2/sub && $V2UTIL/makeapp_nounpack.sys getproj && cd /data'
-alias update_pigs 'update_vos && cd $MARSSUB\
-foreach i ($MARSSUB/pig_*)\
-  $V2UTIL/makeapp_nounpack.sys `basename $i` \
-end \
-cd $MARSSUB && $V2UTIL/makeapp_nounpack.sys pig $MARSLIB && cd /data'
+alias update_pigs_and_pig '~/update_pigs.csh && cd /data'
+alias update_pigs 'update_getproj && update_pigs_and_pig && cd /data'
 alias update_marssub 'update_pigs && cd $MARSSUB && $V2UTIL/bldcomfiles_nounpack.csh $MARSLIB && cd /data'
 alias update_marsmap 'update_marssub && cd $MARSSOURCE && $V2UTIL/makeapp_nounpack.sys marsmap $MARSLIB && cd /data'
 alias update_mars 'update_marssub && cd $MARSSOURCE && $V2UTIL/bldcomfiles_nounpack.csh $MARSLIB && cd /data'

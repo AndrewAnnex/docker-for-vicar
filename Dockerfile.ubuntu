@@ -51,8 +51,11 @@ RUN apt-get update && \
 # compilation docker image
 FROM vicarbase as runtime
 LABEL version="0.1.0" vicarversion="5.0" description="VICAR ubuntu runtime container" maintainer="Andrew Annex <annex@seti.org>"
+COPY update_pigs.csh /home/vos/
 WORKDIR /
 RUN cd /tmp && \
+    chown vos:vos /home/vos/update_pigs.csh && \
+    chmod +x /home/vos/update_pigs.csh && \
     wget https://github.com/NASA-AMMOS/VICAR/releases/download/5.0/vicar_open_bin_x86-64-linx_5.0.tar.gz && \
     tar -xf vicar_open_bin_x86-64-linx_5.0.tar.gz && \
     mv /tmp/vicar_open_bin_x86-64-linx_5.0/vicar_open_5.0 /vos && \
