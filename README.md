@@ -49,7 +49,7 @@ Say you are editing VICAR source code on a host machine and want to compile it w
 
 you would run:
 ```bash
-docker run -w /data/ -v /path/to/host/src/VICAR/vos/:/vossrc --name vicar_compiled --platform linux/amd64 vicar:ubuntu update_mars
+docker run -w /data/ -v /path/to/host/src/VICAR/vos/:/vossrc --name vicar_compiled --platform linux/amd64 vicar:ubuntu 'source ~/.cshrc && update_mars'
 ```
 
 The volume will make the host machine's VICAR source code directory available in the container and the aliases within .cshrc will take care of building the MARS programs in VICAR.
@@ -60,7 +60,12 @@ Then just use docker commit to save the final container as a new image.
 docker container commit <sha of container> vicarprod
 ```
 
-then you can use that container name (vicarprod) in place of the other names 
+then you can use that container name (vicarprod) in place of the other names and run one-off commands like 
+
+```bash
+!docker run -t --rm -w /data/  -v vicarcal:/calibration -v ./path/to/host/data/:/data  vicarprod:latest 'source ~/.cshrc && $MARSLIB/marsrelabel inp=in.vic out=out.vic -cm'
+
+```
 
 ## X11 on macOS
 
