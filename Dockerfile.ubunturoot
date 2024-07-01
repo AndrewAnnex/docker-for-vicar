@@ -1,0 +1,63 @@
+# Use an official ubuntu jammy OS as a parent image
+# Uses a ugly hack to solve missing libXp by using a sym link to libXpm which almost certainly will not work if any libXp is actually needed ever.
+FROM ubuntu:22.04 as vicarbaseroot
+LABEL version="0.1.0" vicarversion="5.0" description="VICAR ubuntu base container" maintainer="Andrew Annex <annex@seti.org>"
+WORKDIR /
+COPY .cshrc /
+# okay a big step here
+RUN apt-get update && \
+    apt-get install --yes software-properties-common && \
+    apt-get install --no-install-recommends --yes \
+    wget \
+    rsync \
+    gdb \
+    vim \
+    tcsh \
+    libcurl4-openssl-dev \
+    libtbb2 \
+    libncurses5-dev \
+    build-essential \
+    gfortran \
+    xorg-dev \
+    xutils-dev \
+    xauth \
+    xserver-xorg-dev \
+    libmotif-dev \
+    libmotif-common \
+    libx11-dev \
+    libudev-dev \
+    libxml2-dev \
+    libglfw3-dev \
+    libgl1-mesa-dev \
+    libglu1-mesa-dev \
+    openjdk-18-jre && \
+    apt-get purge software-properties-common --yes && \
+    apt-get autoremove --yes && \
+    apt-get clean --yes && \
+    mkdir /data && \
+    mv /.cshrc /root/.cshrc && \
+    chmod -R 777 /root && \
+    chmod -R 777 /data && \
+    chsh -s /bin/tcsh && \
+    ln -s /usr/lib/x86_64-linux-gnu/libXpm.so /usr/lib/x86_64-linux-gnu/libXp.so.6 && \
+    rm -rf /var/lib/apt/lists/*;
+
+# compilation docker image
+FROM vicarbaseroot as runtime
+LABEL version="0.1.0" vicarversion="5.0" description="VICAR ubuntu runtime container" maintainer="Andrew Annex <annex@seti.org>"
+COPY update_pigs.csh /root/
+WORKDIR /
+RUN cd /tmp && \
+    chmod +x /root/update_pigs.csh && \
+    wget https://github.com/NASA-AMMOS/VICAR/releases/download/5.0/vicar_open_bin_x86-64-linx_5.0.tar.gz && \
+    tar -xf vicar_open_bin_x86-64-linx_5.0.tar.gz && \
+    mv /tmp/vicar_open_bin_x86-64-linx_5.0/vicar_open_5.0 /vos && \
+    mv /tmp/vicar_open_bin_x86-64-linx_5.0/vicar_open_ext_x86-64-linx_5.0 /external && \
+    rm /tmp/vicar_open_bin_x86-64-linx_5.0.tar.gz && \
+    rm -rf /tmp/vicar_open_bin_x86-64-linx_5.0 && \
+    chmod -R 777 /vos && \
+    chmod -R 777 /external
+# Use tcsh
+ENTRYPOINT ["/bin/tcsh", "-c"]
+# Volume for data input
+VOLUME /data

@@ -21,7 +21,8 @@ else
 	source $V2TOP/vicset2.csh
 endif
 
-setenv V2JDK /usr/lib/jvm/java-17-openjdk-amd64/
+# todo replace which /etc/alternatives/java
+setenv V2JDK /usr/lib/jvm/java-18-openjdk-amd64/
 
 if (! $?ACC_MARS_CONFIG_PATH == "") then
     setenv MARS_CONFIG_PATH `echo $ACC_MARS_CONFIG_PATH | sed 's/:$//' | sed 's/\/\//\//g' | sed 's/\/:/:/g' | sed 's/\/$//'`
